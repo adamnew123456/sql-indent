@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>sql_indent</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="TextStream.fs" />
+    <Compile Include="Tokenizer.fs" />
+    <Compile Include="Indenter.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+</Project>
