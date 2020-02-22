@@ -33,6 +33,8 @@ let block_tokens = Set.ofList [
     "GROUP BY"
     "AND"
     "OR"
+    "WHEN"
+    "THEN"
 ]
 
 /// <summary>
@@ -40,6 +42,7 @@ let block_tokens = Set.ofList [
 /// </summary>
 let group_tokens = Set.ofList [
     "("
+    "CASE"
 ]
 
 /// <summary>
@@ -47,6 +50,7 @@ let group_tokens = Set.ofList [
 /// </summary>
 let end_group_tokens = Set.ofList [
     ")"
+    "END"
 ]
 
 /// <summary>
