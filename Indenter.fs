@@ -77,7 +77,17 @@ let upper (s: string) = s.ToUpper()
 /// </summary>
 let glue_tokens (tokens: string list) =
     let input_tokens = Array.ofList tokens
-    let rec step idx tokens output =
+    let rec glue_qualified idx tokens output =
+        match tokens with
+        | domain :: "." :: _ :: rest ->
+            let name = Array.item (idx + 1) input_tokens
+            let joined = sprintf "%s.%s" domain name
+            glue_qualified (idx + 2) (joined :: rest) output
+
+        | qualified :: rest ->
+            step idx rest (qualified :: output)
+
+    and step idx tokens output =
         match tokens with
         | "FULL" :: "JOIN" :: rest ->
             step (idx + 2) rest ("FULL JOIN" :: output)
@@ -98,10 +108,10 @@ let glue_tokens (tokens: string list) =
             step (idx + 3) rest ("RIGHT OUTER JOIN" :: output)
 
         | "CROSS" :: "JOIN" :: rest ->
-            step (idx + 3) rest ("CROSS JOIN" :: output)
+            step (idx + 2) rest ("CROSS JOIN" :: output)
 
         | "UNION" :: "JOIN" :: rest ->
-            step (idx + 3) rest ("UNION JOIN" :: output)
+            step (idx + 2) rest ("UNION JOIN" :: output)
 
         | "INNER" :: "JOIN" :: rest ->
             step (idx + 2) rest ("INNER JOIN" :: output)
@@ -118,7 +128,8 @@ let glue_tokens (tokens: string list) =
         | _ :: "." :: _ :: rest ->
             let domain = Array.item idx input_tokens
             let name = Array.item (idx + 2) input_tokens
-            step (idx + 3) rest (sprintf "%s.%s" domain name :: output)
+            let joined = sprintf "%s.%s" domain name
+            glue_qualified (idx + 3) (joined :: rest) output
 
         | _ :: rest ->
             let token = Array.item idx input_tokens
