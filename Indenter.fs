@@ -14,6 +14,7 @@ type OutputToken = {
 /// </summary>
 let block_tokens = Set.ofList [
     "SELECT"
+    "SELECT DISTINCT"
     "FROM"
     "FULL JOIN"
     "LEFT JOIN"
@@ -35,6 +36,10 @@ let block_tokens = Set.ofList [
     "OR"
     "WHEN"
     "THEN"
+    "UNION"
+    "UNION ALL"
+    "INTERSECT"
+    "MINUS"
 ]
 
 /// <summary>
@@ -124,6 +129,12 @@ let glue_tokens (tokens: string list) =
 
         | "ORDER" :: "BY" :: rest ->
             step (idx + 2) rest ("ORDER BY" :: output)
+
+        | "SELECT" :: "DISTINCT" :: rest ->
+            step (idx + 2) rest ("SELECT DISTINCT" :: output)
+
+        | "UNION" :: "ALL" :: rest ->
+            step (idx + 2) rest ("UNION ALL" :: output)
 
         | _ :: "." :: _ :: rest ->
             let domain = Array.item idx input_tokens
